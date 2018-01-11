@@ -180,7 +180,7 @@ for i=1:n
     isonormals(x*1e9,y*1e9,z*1e9,PSI, p)
     set(p, 'FaceColor', 'red', 'EdgeColor', 'none', 'FaceLighting', 'gouraud')
     daspect([1,1,1])
-    light ("Position", [1 1 5]);
+    light ('Position', [1 1 5]);
     M=max([Mx My]);
     xlim([-1 1]*M/3*1e9)
     ylim([-1 1]*M/3*1e9)
@@ -224,7 +224,7 @@ for i=1:n
     isonormals(x*1e9,y*1e9,z*1e9,PSI, p)
     set(p, 'FaceColor', 'red', 'EdgeColor', 'none', 'FaceLighting', 'gouraud')
     daspect([1,1,1])
-    light ("Position", [1 1 5]);
+    light ('Position', [1 1 5]);
     M=max([Mx My]);
     xlim([-1 1]*M/3*1e9)
     ylim([-1 1]*M/3*1e9)
