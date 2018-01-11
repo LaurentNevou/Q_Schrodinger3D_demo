@@ -108,7 +108,7 @@ E=real(E);
 for j=1:n
     PSI = reshape(psik(:,j),[NGy,NGx,NGz]);
     PSI = invFFT3D(PSI,Ny,Nx,Nz)/(dxx*dyy*dzz) ;
-    psi_temp = abs(interp3(XX,YY,ZZ,PSI,X,Y,Z)).^2;
+    psi_temp = interp3(XX,YY,ZZ,PSI,X,Y,Z);
     psi(:,:,:,j) = psi_temp / max(psi_temp(:));
 end
 

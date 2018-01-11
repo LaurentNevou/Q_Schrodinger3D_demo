@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%% last update 9Jan2018, lne %%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%% last update 11Jan2018, lne %%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 clear all
@@ -15,7 +15,7 @@ clc
 FE_Method=0;            % Diagonalization of the Hamiltonian (FEM)
 PWE_Method=1;           % Plane Wave Expansion (PWE)
 
-saveXY=0;
+saveXYZ=0;
 saveV=0;
 savePSI=0;
 
@@ -37,7 +37,7 @@ Fz=0;%5e7;              %% Electric field [V/m] in the z-direction
 
 Nx=64;                  %% Meshing point in x-direction
 Ny=64;                  %% Meshing point in y-direction
-Nz=32;                  %% Meshing point in z-direction
+Nz=64;                  %% Meshing point in z-direction
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Choose your between the next 3 potentials or build your own!
@@ -85,7 +85,7 @@ if PWE_Method==1
     Ny = 64 ;        % number of points on the y grid % has to be a power of 2 (32,64,128,256,512,...) (smaller => faster)
     Nz = 64 ;        % number of points on the y grid % has to be a power of 2 (32,64,128,256,512,...) (smaller => faster)
     NGx = 9;%Nx/2-1  ;    % number of harmonics % must be at least 2 times -1 smaller than Nz (smaller => faster)
-    NGy = 7;%Ny/2-1  ;    % number of harmonics % must be at least 2 times -1 smaller than Nz (smaller => faster)
+    NGy = 13;%Ny/2-1  ;    % number of harmonics % must be at least 2 times -1 smaller than Nz (smaller => faster)
     NGz = 11;%Ny/2-1  ;    % number of harmonics % must be at least 2 times -1 smaller than Nz (smaller => faster)
     
     tic
@@ -116,8 +116,7 @@ display(strcat(num2str(E)))
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%figure('Name','Potential','position',[100 100 1200 400])
-figure('Name','Potential','position',[-1900 50 1600 500])
+figure('Name','Potential','position',[100 100 1200 400])
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -134,7 +133,6 @@ ylim([-1 1]*My/2*1e9)
 xlabel('x (nm)')
 ylabel('z (nm)')
 zlabel('Energy (eV)')
-%title(strcat('Potential, Fx=',num2str(Fx,'%.1e'),'[V/m], Fy=',num2str(Fy,'%.1e'),'[V/m]'))
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -150,7 +148,6 @@ ylim([-1 1]*My/2*1e9)
 
 xlabel('x (nm)')
 ylabel('y (nm)')
-%title(strcat('Potential, Fx=',num2str(Fx,'%.1e'),'[V/m], Fy=',num2str(Fy,'%.1e'),'[V/m]'))
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -159,42 +156,11 @@ if FE_Method==1
 c=0;
 ii=0;
 for i=1:n
-    if i>45
-      break
-    end
-    if i==1 || i==16 || i==31
-      figure('Name','FEM method','position',[100 100 1600 900])
-      c=c+1;
-      ii=0;
-    end
-    ii=ii+1;
-    
-    subplot(3,5,ii,'fontsize',10)
-    hold on
-    
-    pcolor(x*1e9,y*1e9,(psi1(:,:,i)) )  
-    contour(x*1e9,y*1e9,V0,1,'linewidth',3,'linecolor','w')
-    
-    xlabel('x (nm)')
-    ylabel('y (nm)')
-    title(strcat('E',num2str(i),'=',num2str(E(i,1)*1000,'%.1f'),'meV'))
-    %axis equal
-    shading flat
-    colormap(jet)
-end
-end
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-if PWE_Method==1
-c=0;
-ii=0;
-for i=1:n
     if i>18
       break
     end
     if i==1 || i==7 || i==13
-      figure('Name','PWE method','position',[-1900 50 1850 1000])
+      figure('Name','PWE method','position',[100 100 1600 800])
       c=c+1;
       ii=0;
     end
@@ -208,9 +174,10 @@ for i=1:n
     colormap(cool)
     %shading flat
     
+    PSI=abs(psi1(:,:,:,i)).^2;
     
-    p = patch(isosurface(x*1e9,y*1e9,z*1e9,psi2(:,:,:,i),max(psi2(:))/6));
-    isonormals(x*1e9,y*1e9,z*1e9,psi2(:,:,:,i), p)
+    p = patch(isosurface(x*1e9,y*1e9,z*1e9,PSI,max(PSI(:))/6));
+    isonormals(x*1e9,y*1e9,z*1e9,PSI, p)
     set(p, 'FaceColor', 'red', 'EdgeColor', 'none', 'FaceLighting', 'gouraud')
     daspect([1,1,1])
     light ("Position", [1 1 5]);
@@ -221,12 +188,56 @@ for i=1:n
     
     xlabel('x (nm)')
     ylabel('y (nm)')
-    title(strcat('E',num2str(i),'-E1=',num2str((E(i,2)-E(1,2))*1000,'%.1f'),'meV'))
+    zlabel('z (nm)')
+    title(strcat('E',num2str(i),'-E1=',num2str((E(i,1)-E(1,1))*1000,'%.1f'),'meV'))
 
-    end
+end
 end
 
-break
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+if PWE_Method==1
+c=0;
+ii=0;
+for i=1:n
+    if i>18
+      break
+    end
+    if i==1 || i==7 || i==13
+      figure('Name','PWE method','position',[100 100 1600 800])
+      c=c+1;
+      ii=0;
+    end
+    ii=ii+1;
+    
+    subplot(2,3,ii,'fontsize',10)
+    hold on;grid on;view (-38, 20);
+    
+    xslice = 0; yslice =0; zslice = 0.4;
+    slice(X*1e9,Y*1e9,Z*1e9,V0,[],[],zslice)
+    colormap(cool)
+    %shading flat
+    
+    PSI=abs(psi2(:,:,:,i)).^2;
+    
+    p = patch(isosurface(x*1e9,y*1e9,z*1e9,PSI,max(PSI(:))/6));
+    isonormals(x*1e9,y*1e9,z*1e9,PSI, p)
+    set(p, 'FaceColor', 'red', 'EdgeColor', 'none', 'FaceLighting', 'gouraud')
+    daspect([1,1,1])
+    light ("Position", [1 1 5]);
+    M=max([Mx My]);
+    xlim([-1 1]*M/3*1e9)
+    ylim([-1 1]*M/3*1e9)
+    zlim([-1 1]*M/3*1e9)
+    
+    xlabel('x (nm)')
+    ylabel('y (nm)')
+    zlabel('z (nm)')
+    title(strcat('E',num2str(i),'-E1=',num2str((E(i,2)-E(1,2))*1000,'%.1f'),'meV'))
+
+end
+end
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%% Data save %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
