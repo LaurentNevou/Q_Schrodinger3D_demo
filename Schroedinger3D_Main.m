@@ -22,7 +22,7 @@ savePSI=0;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 n=6;                   %% number of solution asked 
-Mass = 0.043;           %% effective mass, constant over all the structure...
+
 Fx=0;%5e7;              %% Electric field [V/m] in the x-direction
 Fy=0;%5e6;              %% Electric field [V/m] in the y-direction
 Fz=0;%5e7;              %% Electric field [V/m] in the z-direction
@@ -123,23 +123,23 @@ figure('Name','Potential','position',[100 100 1200 400])
 subplot(1,2,1,'fontsize',15)
 hold on;grid on;
 
-pcolor(y*1e9,z*1e9,squeeze(V0(:,round(end/2),:))')
+pcolor(x*1e9,z*1e9,squeeze(V0(round(end/2),:,:))')
 colormap(cool)
 colorbar
 
-xlim([-1 1]*My/2*1e9)
+xlim([-1 1]*Mx/2*1e9)
 ylim([-1 1]*My/2*1e9)
 
 xlabel('x (nm)')
 ylabel('z (nm)')
-zlabel('Energy (eV)')
+title('Potential: Vxz')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 subplot(1,2,2,'fontsize',15)
 hold on;grid on;
 
-pcolor(x*1e9,y*1e9,squeeze(V0(:,:,round(end/2))))
+pcolor(x*1e9,y*1e9,squeeze(V0(:,:,round(end/2)-5)))
 colormap(cool)
 colorbar
 
@@ -148,6 +148,7 @@ ylim([-1 1]*My/2*1e9)
 
 xlabel('x (nm)')
 ylabel('y (nm)')
+title('Potential: Vxy')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -160,7 +161,7 @@ for i=1:n
       break
     end
     if i==1 || i==7 || i==13
-      figure('Name','PWE method','position',[100 100 1600 800])
+      figure('Name','FEM method','position',[100 100 1600 800])
       c=c+1;
       ii=0;
     end

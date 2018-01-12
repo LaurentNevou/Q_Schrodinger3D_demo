@@ -1,4 +1,4 @@
-
+Mass = 0.043;           %% effective mass, constant over all the structure...
 Mx=50e-9;               %% map X [m]
 My=50e-9;               %% map Y [m]
 Mz=10e-9;               %% map Z [m]
