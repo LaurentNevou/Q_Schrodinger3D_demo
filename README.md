@@ -14,6 +14,6 @@ Different potentials are proposed:
 
 -> InAs/AlInAs quantum dash
 
--> GaN/AlN quantum dot (pyramidal with hexagon base) STILL HAS TO BE DONE...
+-> GaN/AlN quantum dot (pyramidal with hexagon base)
 
 Any potential can be loaded with homogeneous grid x,y,z [m] and V [eV]
