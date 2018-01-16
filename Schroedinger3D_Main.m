@@ -21,7 +21,7 @@ savePSI=0;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-n=6;                   %% number of solution asked 
+n=12;                   %% number of solution asked 
 
 Fx=0;%5e7;              %% Electric field [V/m] in the x-direction
 Fy=0;%5e6;              %% Electric field [V/m] in the y-direction
@@ -42,13 +42,9 @@ Nz=64;                  %% Meshing point in z-direction
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Choose your between the next 3 potentials or build your own!
 
-Pot_InAs_GaAs
+%Pot_InAs_GaAs
 %Pot_InAs_AlInAs
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-Vb=0.55;                 %% Potential barrier height[eV]
-V0=(idx)*0 + (1-idx)*Vb ;
+Pot_GaN_AlN
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -58,11 +54,6 @@ V0=(idx)*0 + (1-idx)*Vb ;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-V0=(Fx*X)+V0;        % adding the electric field Fx to the potential in the x-direction
-V0=(Fy*Y)+V0;        % adding the electric field Fy to the potential in the y-direction
-V0=(Fz*Z)+V0;        % adding the electric field Fz to the potential in the y-direction
-V0=V0-min(min(min(V0)));
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%% Selection of the model %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -84,7 +75,7 @@ if PWE_Method==1
     Nx = 64 ;        % number of points on the x grid % has to be a power of 2 (32,64,128,256,512,...) (smaller => faster)
     Ny = 64 ;        % number of points on the y grid % has to be a power of 2 (32,64,128,256,512,...) (smaller => faster)
     Nz = 64 ;        % number of points on the y grid % has to be a power of 2 (32,64,128,256,512,...) (smaller => faster)
-    NGx = 9;%Nx/2-1  ;    % number of harmonics % must be at least 2 times -1 smaller than Nz (smaller => faster)
+    NGx = 15;%Nx/2-1  ;    % number of harmonics % must be at least 2 times -1 smaller than Nz (smaller => faster)
     NGy = 13;%Ny/2-1  ;    % number of harmonics % must be at least 2 times -1 smaller than Nz (smaller => faster)
     NGz = 11;%Ny/2-1  ;    % number of harmonics % must be at least 2 times -1 smaller than Nz (smaller => faster)
     
@@ -116,43 +107,6 @@ display(strcat(num2str(E)))
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-figure('Name','Potential','position',[100 100 1200 400])
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-subplot(1,2,1,'fontsize',15)
-hold on;grid on;
-
-pcolor(x*1e9,z*1e9,squeeze(V0(round(end/2),:,:))')
-colormap(cool)
-colorbar
-
-xlim([-1 1]*Mx/2*1e9)
-ylim([-1 1]*My/2*1e9)
-
-xlabel('x (nm)')
-ylabel('z (nm)')
-title('Potential: Vxz')
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-subplot(1,2,2,'fontsize',15)
-hold on;grid on;
-
-pcolor(x*1e9,y*1e9,squeeze(V0(:,:,round(end/2)-5)))
-colormap(cool)
-colorbar
-
-xlim([-1 1]*My/2*1e9)
-ylim([-1 1]*My/2*1e9)
-
-xlabel('x (nm)')
-ylabel('y (nm)')
-title('Potential: Vxy')
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 if FE_Method==1
 c=0;
 ii=0;
@@ -170,8 +124,8 @@ for i=1:n
     subplot(2,3,ii,'fontsize',10)
     hold on;grid on;view (-38, 20);
     
-    xslice = 0; yslice =0; zslice = 0.4;
-    slice(X*1e9,Y*1e9,Z*1e9,V0,[],[],zslice)
+    idz=find(z>0);idz=idz(1);
+    pcolor(x*1e9,y*1e9,squeeze(V0(:,:,idz)))
     colormap(cool)
     %shading flat
     
@@ -214,9 +168,14 @@ for i=1:n
     subplot(2,3,ii,'fontsize',10)
     hold on;grid on;view (-38, 20);
     
-    xslice = 0; yslice =0; zslice = 0.4;
-    slice(X*1e9,Y*1e9,Z*1e9,V0,[],[],zslice)
+    idz=find(z>0);idz=idz(1);
+    pcolor(x*1e9,y*1e9,squeeze(V0(:,:,idz)))
     colormap(cool)
+    
+    %contour(x*1e9,y*1e9,squeeze(V0(:,:,idz)),1,'linewidth',3,'linecolor','k')
+    %idz=find(z>QDh);idz=idz(1)-1;
+    %contour(x*1e9,y*1e9,squeeze(V0(:,:,idz)),1,'linewidth',3,'linecolor','k')
+    
     %shading flat
     
     PSI=abs(psi2(:,:,:,i)).^2;
