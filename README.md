@@ -17,3 +17,5 @@ Different potentials are proposed:
 -> GaN/AlN quantum dot (pyramidal with hexagon base with Electrical Field)
 
 Any potential can be loaded with homogeneous grid x,y,z [m] and V [eV]
+
+=> If you like it, don't forget the star!
