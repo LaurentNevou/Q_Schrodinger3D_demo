@@ -4,7 +4,7 @@ This code solves the time independent Schroedinger equation in 3D with a constan
 
 It uses 2 different algorithms that can be switched ON/OFF:
 
--> The FEM: Finite Elements Method (you have to be gentle with the amount of meshing points)
+-> The FDM: Finite Difference Method (you have to be gentle with the amount of meshing points)
 
 -> The PWE: Plane Wave Expansion method that solves the equation in the Fourier space
 
