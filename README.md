@@ -1,5 +1,8 @@
 # Schroedinger3D_demo
 
+![image](https://user-images.githubusercontent.com/35040499/111983352-52cc8100-8b0a-11eb-8170-dec602937eb3.png)
+
+
 This code solves the time independent Schroedinger equation in 3D with a constant mass.
 
 It uses 2 different algorithms that can be switched ON/OFF:
